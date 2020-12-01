@@ -12,4 +12,4 @@ multiply the 2 entries == answer
 #### Part2:
 
 3 entries, sum == 2020
-multipl3 the 3 entries == answer
+multiply the 3 entries == answer
