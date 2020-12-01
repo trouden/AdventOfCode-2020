@@ -2,6 +2,8 @@
 
 ## Challenge 1
 
+Solution: get all possible combinations and validate them (n k). Combinations are calculated using the itertools library.
+
 #### Part1:
 
 2 entries, sum == 2020
