@@ -1,8 +1,9 @@
+use itertools::Itertools;
 use std::fs;
 
 #[derive(Debug)]
 pub struct Challenge1 {
-    expenses: Vec<i32>
+    expenses: Vec<i32>,
 }
 
 impl Challenge1 {
@@ -14,45 +15,55 @@ impl Challenge1 {
             expenses: Vec::new(),
         };
 
-        for elem in file_content.split("\n") {
-            challenge.expenses.push(elem.parse::<i32>().unwrap())
+        for elem in file_content.split("\n").map(|s| { s.parse::<i32>().unwrap()}).sorted() {
+            challenge.expenses.push(elem)
         }
 
         challenge
     }
-    
-    pub fn run(&self) -> String {
-        let mut index = 0;
-        let mut elem1: i32 = 0;
-        let mut elem2: i32 = 0;
-        let mut found = false;
 
-        while !found {
-            if index >= self.expenses.len() {
-                break;
-            }
-
-            elem1 = self.expenses[index];
-
-            for (i, elem) in self.expenses.iter().enumerate() {
-                if i == index {
-                    continue;
-                }
-                if elem1 + *elem == 2020 {
-                    elem2 = *elem;
-                    found = true;
-                    break;
-                }
-            }
-
-            index = index + 1;
-        }
-
-        if found {
-            let result = (elem1 * elem2).to_string();
-            result
-        } else {
-            String::from("No result")
+    pub fn part1(&self) -> String {
+        match get_product_if_sum_equals(&self.expenses, 2, 2020) {
+            None => return String::from("No result found"),
+            Some(number) => return number.to_string(),
         }
     }
+
+    pub fn part2(&self) -> String {
+        match get_product_if_sum_equals(&self.expenses, 3, 2020) {
+            None => return String::from("No result found"),
+            Some(number) => return number.to_string(),
+        }
+    }
+}
+
+fn get_product_if_sum_equals(set: &[i32], combination_length: usize, required_sum: i32) -> Option<i64> {
+
+    let combinations = set.iter().combinations(combination_length);
+
+    let mut sum = 0;
+    let mut product: i64 = 0;
+
+    for combination in combinations {
+
+        for elem in combination {
+            sum = sum + *elem;
+    
+            if product == 0 {
+                product = i64::from(*elem);
+            } else {
+                product = product * i64::from(*elem);
+            }
+    
+        }
+    
+        if sum == required_sum {
+            return Some(product);
+        }
+
+        sum = 0;
+        product = 0;
+    }
+    
+    None
 }
