@@ -69,11 +69,7 @@ impl Challenge2 {
             let char_at_index1 = _password.as_bytes()[*_index1 - 1] as char;
             let char_at_index2 = _password.as_bytes()[*_index2 - 1] as char;
 
-            if char_at_index1 == *_character {
-                if char_at_index2 != *_character {
-                    valid_passwords = valid_passwords + 1;
-                }
-            } else if char_at_index2 == *_character {
+            if (char_at_index1 == *_character) ^ (char_at_index2 == *_character) {
                 valid_passwords = valid_passwords + 1;
             }
         }
