@@ -15,7 +15,11 @@ impl Challenge1 {
             expenses: Vec::new(),
         };
 
-        for elem in file_content.split("\n").map(|s| { s.parse::<i32>().unwrap()}).sorted() {
+        for elem in file_content
+            .split("\n")
+            .map(|s| s.parse::<i32>().unwrap())
+            .sorted()
+        {
             challenge.expenses.push(elem)
         }
 
@@ -37,33 +41,27 @@ impl Challenge1 {
     }
 }
 
-fn get_product_if_sum_equals(set: &[i32], combination_length: usize, required_sum: i32) -> Option<i64> {
-
+fn get_product_if_sum_equals(
+    set: &[i32],
+    combination_length: usize,
+    required_sum: i32,
+) -> Option<i64> {
     let combinations = set.iter().combinations(combination_length);
-
     let mut sum = 0;
     let mut product: i64 = 0;
-
     for combination in combinations {
-
         for elem in combination {
             sum = sum + *elem;
-    
             if product == 0 {
                 product = i64::from(*elem);
             } else {
                 product = product * i64::from(*elem);
             }
-    
         }
-    
         if sum == required_sum {
             return Some(product);
         }
-
         sum = 0;
         product = 0;
-    }
-    
-    None
+    }    None
 }
