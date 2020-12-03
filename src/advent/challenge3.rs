@@ -12,10 +12,7 @@ impl Challenge3 {
 
         let mut challenge = Challenge3 { map: Vec::new() };
 
-        for elem in file_content
-            .lines()
-            .map(|s| s.chars().collect())
-        {
+        for elem in file_content.lines().map(|s| s.chars().collect()) {
             challenge.map.push(elem)
         }
 
@@ -25,12 +22,11 @@ impl Challenge3 {
     pub fn part1(&self) -> String {
         match self.trees_on_slope_counter(1, 3) {
             None => return String::from("Something went wrong"),
-            Some(trees) => return trees.to_string()
+            Some(trees) => return trees.to_string(),
         }
     }
 
     pub fn part2(&self) -> String {
-        
         // Don't bother doing match flows...
         let test_1 = self.trees_on_slope_counter(1, 1).unwrap();
         let test_2 = self.trees_on_slope_counter(1, 3).unwrap();
@@ -45,7 +41,7 @@ impl Challenge3 {
     fn trees_on_slope_counter(&self, vertical: usize, horizontal: usize) -> Option<u8> {
         let height = self.map.len();
 
-        if self.map.len() == 0  {
+        if self.map.len() == 0 {
             return None;
         }
 
@@ -63,12 +59,9 @@ impl Challenge3 {
         let mut tree_count: u8 = 0;
 
         while y < height {
-
             let row = &self.map[y];
 
-            if x >= row.len() {
-                x -= row.len();
-            }
+            x = x % row.len();
 
             let spot = row[x];
 

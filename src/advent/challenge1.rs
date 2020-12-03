@@ -63,5 +63,6 @@ fn get_product_if_sum_equals(
         }
         sum = 0;
         product = 0;
-    }    None
+    }
+    None
 }

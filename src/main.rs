@@ -21,5 +21,4 @@ fn main() {
 
     println!("part 1: {}", challenge3.part1());
     println!("part 2: {}", challenge3.part2());
-
 }

@@ -6,7 +6,6 @@ pub struct Challenge2 {
 }
 
 impl Challenge2 {
-
     pub fn new() -> Challenge2 {
         let file_content = fs::read_to_string("./src/Data/puzzle2.data")
             .expect("Something went wrong while reading the file");
@@ -34,9 +33,13 @@ impl Challenge2 {
                 panic!("Invalid input, expect 2 numbers.")
             }
 
-            (numbers[0].parse::<usize>().unwrap(),  numbers[1].parse::<usize>().unwrap(), character.parse::<char>().unwrap(), String::from(password))
+            (
+                numbers[0].parse::<usize>().unwrap(),
+                numbers[1].parse::<usize>().unwrap(),
+                character.parse::<char>().unwrap(),
+                String::from(password),
+            )
         });
-        
         for elem in password_with_policy {
             challenge.passwords.push(elem)
         }
