@@ -15,7 +15,7 @@ impl Challenge2 {
             passwords: Vec::new(),
         };
 
-        let password_with_policy = file_content.split("\n").map(|x| {
+        let password_with_policy = file_content.lines().map(|x| {
             let split = x.split(":").collect::<Vec<_>>();
 
             if split.len() != 2 {

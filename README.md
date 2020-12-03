@@ -23,3 +23,11 @@ Simple char count
 
 #### Part 2:
 Strings cannot be index in rust, but since we are sure it only contains ASCII characters we can access the raw bytes and cast them to chars.
+
+## Challenge 3
+
+#### Part 1:
+Simple vector traversal with checking indices for exceeding max length
+
+#### Part 2:
+Make part 1 a function with input for the slope and multiply the results.

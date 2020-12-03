@@ -16,7 +16,7 @@ impl Challenge1 {
         };
 
         for elem in file_content
-            .split("\n")
+            .lines()
             .map(|s| s.parse::<i32>().unwrap())
             .sorted()
         {
