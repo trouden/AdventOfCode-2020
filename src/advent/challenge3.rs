@@ -45,7 +45,7 @@ impl Challenge3 {
             return None;
         }
 
-        if *(&self.map[0].len()) == 0 {
+        if (&self.map[0]).len() == 0 {
             return None;
         }
 
@@ -63,9 +63,7 @@ impl Challenge3 {
 
             x = x % row.len();
 
-            let spot = row[x];
-
-            if spot == '#' {
+            if row[x] == '#' {
                 tree_count += 1;
             }
 
