@@ -1,9 +1,9 @@
-use std::collections::HashMap;
 use std::fs;
+use std::collections::BTreeMap;
 
 #[derive(Debug)]
 pub struct Challenge4 {
-    passport_batch: Vec<HashMap<String, String>>,
+    passport_batch: Vec<BTreeMap<String, String>>,
 }
 
 impl Challenge4 {
@@ -18,7 +18,7 @@ impl Challenge4 {
         for elem in file_content.split("\n\n").collect::<Vec<_>>() {
             let parts = elem.split(&['\n', ' '][..]).collect::<Vec<_>>();
 
-            let mut hash_map = HashMap::new();
+            let mut hash_map = BTreeMap::new();
 
             for kv_non_split in parts {
                 let kv = kv_non_split.split(':').collect::<Vec<_>>();
@@ -73,7 +73,7 @@ impl Challenge4 {
             match try_get_i32_from_hash_map(passport, "byr") {
                 None => continue,
                 Some(v) => {
-                    if v < 1920 || v > 2002 {
+                    if !(v >= 1920 && v <= 2002) {
                         continue;
                     }
                 }
@@ -82,7 +82,7 @@ impl Challenge4 {
             match try_get_i32_from_hash_map(passport, "iyr") {
                 None => continue,
                 Some(v) => {
-                    if v < 2010 || v > 2020 {
+                    if !(v >= 2010 && v <= 2020) {
                         continue;
                     }
                 }
@@ -91,7 +91,7 @@ impl Challenge4 {
             match try_get_i32_from_hash_map(passport, "eyr") {
                 None => continue,
                 Some(v) => {
-                    if v < 2020 || v > 2030 {
+                    if !(v >= 2020 && v <= 2030) {
                         continue;
                     }
                 }
@@ -106,7 +106,7 @@ impl Challenge4 {
                         match (&v[..v.len() - 2]).parse::<i32>() {
                             Err(_) => continue,
                             Ok(pv) => {
-                                if pv >= 150 || pv <= 193 {
+                                if pv >= 150 && pv <= 193 {
                                     validated = true;
                                 } else {
                                     continue;
@@ -115,11 +115,11 @@ impl Challenge4 {
                         }
                     }
 
-                    if validated || v.ends_with("in") {
+                    if !validated || v.ends_with("in") {
                         match (&v[..v.len() - 2]).parse::<i32>() {
                             Err(_) => continue,
                             Ok(pv) => {
-                                if pv >= 59 || pv <= 76 {
+                                if pv >= 59 && pv <= 76 {
                                     validated = true;
                                 } else {
                                     continue;
@@ -169,10 +169,11 @@ impl Challenge4 {
 
                     match v.parse::<i32>() {
                         Err(_) => continue,
-                        Ok(_) => ()
+                        Ok(_) => (),
                     }
                 }
             }
+
             valid_passports += 1;
         }
 
@@ -180,7 +181,7 @@ impl Challenge4 {
     }
 }
 
-fn try_get_i32_from_hash_map(map: &HashMap<String, String>, key: &str) -> Option<i32> {
+fn try_get_i32_from_hash_map(map: &BTreeMap<String, String>, key: &str) -> Option<i32> {
     match map.get(key) {
         None => None,
         Some(v) => match v.parse::<i32>() {
