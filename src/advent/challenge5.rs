@@ -11,7 +11,7 @@ pub struct Challenge5 {
 
 impl Challenge5 {
     pub fn new() -> Self {
-        let file_content = fs::read_to_string("./src/Data/puzzle5.data")
+        let file_content = fs::read_to_string("./src/data/puzzle5.data")
             .expect("Something went wrong while reading the file");
 
         Challenge5 {

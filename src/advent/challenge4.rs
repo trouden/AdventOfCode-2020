@@ -8,7 +8,7 @@ pub struct Challenge4 {
 
 impl Challenge4 {
     pub fn new() -> Challenge4 {
-        let file_content = fs::read_to_string("./src/Data/puzzle4.data")
+        let file_content = fs::read_to_string("./src/data/puzzle4.data")
             .expect("Something went wrong while reading the file");
 
         let mut challenge = Challenge4 {
