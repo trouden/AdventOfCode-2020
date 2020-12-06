@@ -3,36 +3,43 @@ mod advent;
 fn main() {
     println!("Executing Challenge 1!");
 
-    let challenge1 = advent::Challenge1::new();
+    let challenge = advent::Challenge1::new();
 
-    println!("part 1: {}", challenge1.part1());
-    println!("part 2: {}", challenge1.part2());
+    println!("part 1: {}", challenge.part1());
+    println!("part 2: {}", challenge.part2());
 
     println!("Executing Challenge 2!");
 
-    let challenge2 = advent::Challenge2::new();
+    let challenge = advent::Challenge2::new();
 
-    println!("part 1: {}", challenge2.part1());
-    println!("part 2: {}", challenge2.part2());
+    println!("part 1: {}", challenge.part1());
+    println!("part 2: {}", challenge.part2());
 
     println!("Executing Challenge 3!");
 
-    let challenge3 = advent::Challenge3::new();
+    let challenge = advent::Challenge3::new();
 
-    println!("part 1: {}", challenge3.part1());
-    println!("part 2: {}", challenge3.part2());
+    println!("part 1: {}", challenge.part1());
+    println!("part 2: {}", challenge.part2());
 
     println!("Executing Challenge 4!");
 
-    let challenge4 = advent::Challenge4::new();
+    let challenge = advent::Challenge4::new();
 
-    println!("part 1: {}", challenge4.part1());
-    println!("part 2: {}", challenge4.part2());
+    println!("part 1: {}", challenge.part1());
+    println!("part 2: {}", challenge.part2());
 
     println!("Executing Challenge 5!");
 
-    let challenge5 = advent::Challenge5::new();
+    let challenge = advent::Challenge5::new();
 
-    println!("part 1: {}", challenge5.part1());
-    println!("part 2: {}", challenge5.part2());
+    println!("part 1: {}", challenge.part1());
+    println!("part 2: {}", challenge.part2());
+
+    println!("Executing Challenge 6!");
+
+    let challenge = advent::Challenge6::new();
+
+    println!("part 1: {}", challenge.part1());
+    println!("part 2: {}", challenge.part2());
 }
