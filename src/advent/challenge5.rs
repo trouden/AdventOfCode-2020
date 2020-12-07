@@ -64,23 +64,12 @@ impl Challenge5 {
 
 fn calculate_seat_id(boarding_id: &str) -> Option<u16> {
     let mut seat_id: u16 = 0;
+    let length: usize = 9;
 
-    let mut shift = 9;
-
-    for column in (&boarding_id[..7]).chars() {
-        if column == 'B' {
-            seat_id |= 1 << shift;
+    for (pos, character) in boarding_id.chars().enumerate() {
+        if character == 'B' || character == 'R' {
+            seat_id |= 1 << (length - pos);
         }
-
-        shift -= 1;
-    }
-
-    for row in (&boarding_id[7..]).chars() {
-        if row == 'R' {
-            seat_id |= 1 << shift;
-        }
-
-        shift -= 1;
     }
 
     Some(seat_id)
