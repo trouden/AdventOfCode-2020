@@ -42,4 +42,11 @@ fn main() {
 
     println!("part 1: {}", challenge.part1());
     println!("part 2: {}", challenge.part2());
+    
+    println!("Executing Challenge 7!");
+
+    let challenge = advent::Challenge7::new();
+
+    println!("part 1: {}", challenge.part1());
+    println!("part 2: {}", challenge.part2());
 }
