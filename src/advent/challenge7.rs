@@ -2,7 +2,7 @@ use std::{collections::HashMap, fs};
 
 #[derive(Debug)]
 pub struct Challenge7 {
-    rules: HashMap<String, Vec<(String, u8)>>,
+    rules: HashMap<String, Vec<(String, u32)>>,
 }
 
 impl Challenge7 {
@@ -21,7 +21,7 @@ impl Challenge7 {
                     }
 
                     let init_color = original[0].trim().replace(" bags", "");
-                    let mut init_content: Vec<(String, u8)> = Vec::new();
+                    let mut init_content: Vec<(String, u32)> = Vec::new();
 
                     let contents = original[1].trim().split(", ").collect::<Vec<_>>();
 
@@ -34,7 +34,7 @@ impl Challenge7 {
                             .chars()
                             .take_while(|c| c.is_digit(10))
                             .collect::<String>()
-                            .parse::<u8>()
+                            .parse::<u32>()
                             .unwrap();
                         let content_color = content
                             .chars()
@@ -54,7 +54,7 @@ impl Challenge7 {
     }
 
     pub fn part1(&self) -> String {
-        let mut gold_bag_count: u16 = 0;
+        let mut gold_bag_count: u32 = 0;
         let shiny_gold = String::from("shiny gold");
 
         for (initial_bag, _) in self.rules.iter() {
@@ -72,10 +72,33 @@ impl Challenge7 {
     }
 
     pub fn part2(&self) -> String {
-        String::from("TODO")
+        match self.get_content_with_count("shiny gold") {
+            None => String::from("Something went wrong"),
+            Some(contents) => {
+                contents.iter().map(|x| {
+                    let (_, count) = x;
+                    *count
+                }).sum::<u32>().to_string()
+            }
+        }
     }
 
     fn get_content(&self, initial_bag: &str) -> Option<Vec<String>> {
+        match self.get_content_with_count(initial_bag) {
+            None => None,
+            Some(contents) => Some(
+                contents
+                    .iter()
+                    .map(|x| {
+                        let (content, _) = x;
+                        String::from(content)
+                    })
+                    .collect::<Vec<_>>(),
+            ),
+        }
+    }
+
+    fn get_content_with_count(&self, initial_bag: &str) -> Option<Vec<(String, u32)>> {
         match self.rules.get(initial_bag) {
             None => None,
             Some(contents) => {
@@ -83,18 +106,19 @@ impl Challenge7 {
                     return None;
                 }
 
-                let mut all_content: Vec<String> = Vec::new();
+                let mut all_content: Vec<(String, u32)> = Vec::new();
 
-                for sub_content in contents.iter().map(|x| {
-                    let (content, _) = x;
-                    String::from(content)
-                }) {
-                    match self.get_content(&sub_content) {
+                for (sub_content, count) in contents.iter() {
+                    match self.get_content_with_count(&sub_content) {
                         None => (),
-                        Some(mut v) => all_content.append(&mut v),
+                        Some(v) => {
+                            for (sub_content_bag, sub_content_count) in v {
+                                all_content.push((sub_content_bag, count*sub_content_count))
+                            }
+                        },
                     }
 
-                    all_content.push(sub_content);
+                    all_content.push((String::from(sub_content), *count));
                 }
 
                 Some(all_content)
