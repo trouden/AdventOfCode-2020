@@ -20,28 +20,22 @@ impl Challenge5 {
     }
 
     pub fn part1(&self) -> String {
-        let mut highest_seat_id: u16 = 0;
-
-        for elem in &self.boarding_passes {
-            let seating_id = calculate_seat_id(elem).unwrap();
-
-            if seating_id > highest_seat_id {
-                highest_seat_id = seating_id;
-            }
-        }
-
-        highest_seat_id.to_string()
+        self.boarding_passes
+            .iter()
+            .map(|x| calculate_seat_id(x).unwrap())
+            .max()
+            .unwrap()
+            .to_string()
     }
 
     pub fn part2(&self) -> String {
         let highest_seat_id: u16 = 0b1111111111;
 
-        let mut existing_seat_ids: BTreeSet<u16> = BTreeSet::new();
-
-        for elem in &self.boarding_passes {
-            let seating_id = calculate_seat_id(elem).unwrap();
-            existing_seat_ids.insert(seating_id);
-        }
+        let existing_seat_ids: BTreeSet<u16> = self
+            .boarding_passes
+            .iter()
+            .map(|x| calculate_seat_id(x).unwrap())
+            .collect();
 
         let possible_seat_ids: BTreeSet<u16> = (0..highest_seat_id).collect();
 
