@@ -1,9 +1,6 @@
 use std::collections::BTreeSet;
 use std::fs;
 
-const ROWS: u8 = 128;
-const COLUMNS: u8 = 8;
-
 #[derive(Debug)]
 pub struct Challenge5 {
     boarding_passes: Vec<String>,
@@ -36,8 +33,8 @@ impl Challenge5 {
         highest_seat_id.to_string()
     }
 
-    pub fn part2(&self) -> String {      
-        let highest_seat_id = (ROWS - 1) as u16 * 8 + (COLUMNS - 1) as u16;
+    pub fn part2(&self) -> String {
+        let highest_seat_id: u16 = 0b1111111111;
 
         let mut existing_seat_ids: BTreeSet<u16> = BTreeSet::new();
 
@@ -55,7 +52,8 @@ impl Challenge5 {
                 continue;
             }
 
-            if existing_seat_ids.contains(&(*elem-1)) && existing_seat_ids.contains(&(*elem+1)) {
+            if existing_seat_ids.contains(&(*elem - 1)) && existing_seat_ids.contains(&(*elem + 1))
+            {
                 return (*elem).to_string();
             }
         }
@@ -65,43 +63,25 @@ impl Challenge5 {
 }
 
 fn calculate_seat_id(boarding_id: &str) -> Option<u16> {
-    let mut row_lower: u8 = 0;
-    let mut row_upper: u8 = ROWS - 1;
+    let mut seat_id: u16 = 0;
 
-    let mut column_lower: u8 = 0;
-    let mut column_upper: u8 = COLUMNS - 1;
+    let mut shift = 9;
 
     for column in (&boarding_id[..7]).chars() {
-        let half = (row_upper - row_lower + 1) / 2;
-
-        if column == 'F' {
-            row_upper -= half;
-        } else if column == 'B' {
-            row_lower += half;
-        } else {
-            return None;
+        if column == 'B' {
+            seat_id |= 1 << shift;
         }
-    }
 
-    if row_lower != row_upper {
-        return None;
+        shift -= 1;
     }
 
     for row in (&boarding_id[7..]).chars() {
-        let half = (column_upper - column_lower + 1) / 2;
-
-        if row == 'L' {
-            column_upper -= half;
-        } else if row == 'R' {
-            column_lower += half;
-        } else {
-            return None;
+        if row == 'R' {
+            seat_id |= 1 << shift;
         }
+
+        shift -= 1;
     }
 
-    if column_lower != column_upper {
-        return None;
-    }
-
-    Some(row_lower as u16 * 8 + column_lower as u16)
+    Some(seat_id)
 }
