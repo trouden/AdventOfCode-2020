@@ -63,7 +63,7 @@ impl Challenge8 {
                         Instruction::JMP(_, _) => true,
                         Instruction::NOP(_, _) => true,
                     })
-                    .map(|&x| x)
+                    .copied()
                     .collect::<Vec<_>>();
 
                 break;
@@ -80,25 +80,20 @@ impl Challenge8 {
             index = new_index;
         }
 
-        let mut pattern_iter_index: usize = 0;
-
-        while pattern_iter_index < pattern.len() {
-            let pattern_index = pattern[pattern_iter_index];
-
-            let mut instructions: Vec<Instruction> = self.instructions.iter().map(|&x| x).collect();
+        for pattern_index in pattern {
+            let mut instructions: Vec<Instruction> = self.instructions.iter().copied().collect();
             instructions[pattern_index] = match instructions[pattern_index] {
                 Instruction::ACC(_, _) => panic!("Invalid input"),
                 Instruction::NOP(i, j) => Instruction::JMP(i, j),
                 Instruction::JMP(i, j) => Instruction::NOP(i, j),
             };
 
-            let (has_loop, accumulator) = iterate_instructions_return_loop_detected_and_accumulator(&instructions);
+            let (has_loop, accumulator) =
+                iterate_instructions_return_loop_detected_and_accumulator(&instructions);
 
             if !has_loop {
                 return accumulator.to_string();
             }
-
-            pattern_iter_index += 1;
         }
 
         String::from("Could not fix loop!")
