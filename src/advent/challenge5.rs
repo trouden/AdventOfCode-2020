@@ -58,7 +58,7 @@ impl Challenge5 {
 
 fn calculate_seat_id(boarding_id: &str) -> Option<u16> {
     let mut seat_id: u16 = 0;
-    let length: usize = boarding_id.len();
+    let length: usize = boarding_id.len() - 1;
 
     for (pos, character) in boarding_id.chars().enumerate() {
         if character == 'B' || character == 'R' {
