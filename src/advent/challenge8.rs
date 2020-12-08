@@ -25,9 +25,9 @@ impl Challenge8 {
                     let number = split[1].parse::<i32>().unwrap();
 
                     let instruction = match instruction_string {
-                        "nop" => Instruction::Nop(i),
-                        "acc" => Instruction::Acc(i, number),
-                        "jmp" => Instruction::Jmp(i, number),
+                        "nop" => Instruction::NOP(i, number),
+                        "acc" => Instruction::ACC(i, number),
+                        "jmp" => Instruction::JMP(i, number),
                         _ => panic!("Invalid value"),
                     };
                     instruction
@@ -37,15 +37,35 @@ impl Challenge8 {
     }
 
     pub fn part1(&self) -> String {
-        let mut accumulator: i32 = 0;
+        let (_, accumulator) =
+            iterate_instructions_return_loop_detected_and_accumulator(&self.instructions);
+        accumulator.to_string()
+    }
 
+    pub fn part2(&self) -> String {
         let instruction_length = self.instructions.len();
         let mut index: usize = 0;
 
         let mut executed_instructions_index: Vec<usize> = Vec::new();
+        let mut pattern: Vec<usize> = Vec::new();
 
         while index < instruction_length {
             if executed_instructions_index.contains(&index) {
+                let start_of_pattern = executed_instructions_index
+                    .iter()
+                    .position(|x| *x == index)
+                    .unwrap();
+
+                pattern = executed_instructions_index[start_of_pattern..]
+                    .iter()
+                    .filter(|&x| match self.instructions[*x] {
+                        Instruction::ACC(_, _) => false,
+                        Instruction::JMP(_, _) => true,
+                        Instruction::NOP(_, _) => true,
+                    })
+                    .map(|&x| x)
+                    .collect::<Vec<_>>();
+
                 break;
             }
 
@@ -54,26 +74,74 @@ impl Challenge8 {
             let instruction = &self.instructions[index];
 
             // Remark: it's not possible to destructure a tuple into existing variables
-            let (new_index, new_accumulator) =
-                instruction.execute_and_return_next_instruction_index_plus_accumulator(accumulator);
+            let (new_index, _) =
+                instruction.execute_and_return_next_instruction_index_plus_accumulator(0);
 
             index = new_index;
-            accumulator = new_accumulator;
         }
 
-        accumulator.to_string()
-    }
+        let mut pattern_iter_index: usize = 0;
 
-    pub fn part2(&self) -> String {
-        String::from("TODO")
+        while pattern_iter_index < pattern.len() {
+            let pattern_index = pattern[pattern_iter_index];
+
+            let mut instructions: Vec<Instruction> = self.instructions.iter().map(|&x| x).collect();
+            instructions[pattern_index] = match instructions[pattern_index] {
+                Instruction::ACC(_, _) => panic!("Invalid input"),
+                Instruction::NOP(i, j) => Instruction::JMP(i, j),
+                Instruction::JMP(i, j) => Instruction::NOP(i, j),
+            };
+
+            let (has_loop, accumulator) = iterate_instructions_return_loop_detected_and_accumulator(&instructions);
+
+            if !has_loop {
+                return accumulator.to_string();
+            }
+
+            pattern_iter_index += 1;
+        }
+
+        String::from("Could not fix loop!")
     }
 }
 
-#[derive(Debug)]
+fn iterate_instructions_return_loop_detected_and_accumulator(
+    instructions: &Vec<Instruction>,
+) -> (bool, i32) {
+    let mut accumulator: i32 = 0;
+    let mut has_loop = false;
+
+    let instruction_length = instructions.len();
+    let mut index: usize = 0;
+
+    let mut executed_instructions_index: Vec<usize> = Vec::new();
+
+    while index < instruction_length {
+        if executed_instructions_index.contains(&index) {
+            has_loop = true;
+            break;
+        }
+
+        executed_instructions_index.push(index);
+
+        let instruction = &instructions[index];
+
+        // Remark: it's not possible to destructure a tuple into existing variables
+        let (new_index, new_accumulator) =
+            instruction.execute_and_return_next_instruction_index_plus_accumulator(accumulator);
+
+        index = new_index;
+        accumulator = new_accumulator;
+    }
+
+    (has_loop, accumulator)
+}
+
+#[derive(Debug, Clone, Copy)]
 enum Instruction {
-    Acc(usize, i32),
-    Jmp(usize, i32),
-    Nop(usize),
+    ACC(usize, i32),
+    JMP(usize, i32),
+    NOP(usize, i32),
 }
 
 impl Instruction {
@@ -82,15 +150,15 @@ impl Instruction {
         accumalator: i32,
     ) -> (usize, i32) {
         match self {
-            Instruction::Nop(i) => (i + 1, accumalator),
-            Instruction::Jmp(i, j) => {
+            Instruction::NOP(i, _j) => (i + 1, accumalator),
+            Instruction::JMP(i, j) => {
                 if j.is_negative() {
                     (i - (j.wrapping_abs() as u32 as usize), accumalator)
                 } else {
                     (i + (*j as usize), accumalator)
                 }
             }
-            Instruction::Acc(i, j) => (i + 1, accumalator + j),
+            Instruction::ACC(i, j) => (i + 1, accumalator + j),
         }
     }
 }
