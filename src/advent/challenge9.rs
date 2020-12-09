@@ -43,23 +43,19 @@ impl Challenge9 {
             }
 
             let mut j: usize = 1;
-            let mut sum: u64 = 0;
-            let mut number_set: Vec<u64> = Vec::new();
+            let mut number_set: Vec<u64> = vec![start];
 
             while (i + j) < self.numbers.len() {
-                let number_2 = self.numbers[i + j];
-                number_set.push(number_2);
+                number_set.push(self.numbers[i + j]);
 
-                sum += number_2;
-
-                if sum >= invalid_number {
+                if number_set.iter().sum::<u64>() >= invalid_number {
                     break;
                 }
 
                 j += 1;
             }
 
-            if sum == invalid_number {
+            if number_set.iter().sum::<u64>() == invalid_number {
                 number_set.sort();
                 return (number_set[0] + number_set[number_set.len() - 1]).to_string();
             }
@@ -71,7 +67,7 @@ impl Challenge9 {
     fn find_invalid_number(&self) -> Option<u64> {
         let mut queue: VecDeque<u64> = self.preamble.iter().copied().collect();
 
-        for number in self.numbers.iter().skip(PREAMBLE_LENGTH) {
+        for number in self.numbers.iter().skip(queue.len()) {
             if !queue_contains_2_sum_parts(&queue, number) {
                 return Some(*number);
             }
@@ -99,9 +95,7 @@ fn queue_contains_2_sum_parts(queue: &VecDeque<u64>, number: &u64) -> bool {
         }
 
         for j in i + 1..sorted.len() {
-            let sum = part_1 + sorted[j];
-
-            match sum.cmp(number) {
+            match (part_1 + sorted[j]).cmp(number) {
                 Ordering::Less => continue,
                 Ordering::Greater => break,
                 Ordering::Equal => return true,
